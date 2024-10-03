@@ -31,7 +31,7 @@ class YZhanJSONTranslater {
     }
 
     $body = json_decode($res[1]['body'], true);
-    return $body['choices'][0]['message']['content'];
+    return json_decode($body['choices'][0]['message']['content'], true);
   }
 
   public function getClient() {
