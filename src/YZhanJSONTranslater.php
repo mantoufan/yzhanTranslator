@@ -22,7 +22,7 @@ class YZhanJSONTranslater {
       'url' => $this->apiUrl . '/v1/chat/completions',
       'postFields' => array(
         'model' => 'gpt-4o',
-        'messages' => array(array('role' => 'system', "content" => 'Translate the values of the JSON object below into [' . $language . '], keep the keys unchanged, and output only the JSON string.\n' . json_encode($json))),
+        'messages' => array(array('role' => 'system', "content" => 'Translate the values of the JSON object below into [' . $language . '], keep the keys unchanged, and output only the JSON string.\n' . json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))),
       ),
     ), $params));
 
