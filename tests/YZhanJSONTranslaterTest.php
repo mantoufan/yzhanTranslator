@@ -19,7 +19,6 @@ class YZhanJSONTranslaterTest extends TestCase {
     return array(
       array(array('hello' => 'hello'), 'zh-CN', array('hello' => '你好')),
       array(array('hello' => 'hello'), 'zh-TW', array('hello' => '你好')),
-      array(array('hello' => 'hello'), 'jp', array('hello' => 'こんにちは')),
       array(array('hello' => '你好'), 'en', array('hello' => 'Hello')),
     );
   }

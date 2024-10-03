@@ -32,7 +32,7 @@ class YZhanJSONTranslater {
 
     $body = json_decode($res[1]['body'], true);
 
-    if ($body['choices'][0]['message']['finish_reason'] === 'length') {
+    if ($body['choices'][0]['finish_reason'] === 'length') {
       return array();
     }
 
