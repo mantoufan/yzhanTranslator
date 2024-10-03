@@ -20,7 +20,7 @@ class YZhanJSONTranslaterTest extends TestCase {
       array(array('hello' => 'hello'), 'zh-CN', array('hello' => '你好')),
       array(array('hello' => 'hello'), 'zh-TW', array('hello' => '你好')),
       array(array('hello' => 'hello'), 'jp', array('hello' => 'こんにちは')),
-      array(array('hello' => '你好'), 'en', array('hello' => 'hello')),
+      array(array('hello' => '你好'), 'en', array('hello' => 'Hello')),
     );
   }
   /**
@@ -28,7 +28,7 @@ class YZhanJSONTranslaterTest extends TestCase {
    * @dataProvider dataProvider
    */
   public function testSet(array $json, string $language, array $translatedJson, &$yzhanJSONTranslater) {
-    $this->assertEquals($yzhanJSONTranslater->translate($json, $language), $translatedJson);
+    $this->assertEquals(json_decode($yzhanJSONTranslater->translate($json, $language), true), $translatedJson);
   }
 }
 ?>

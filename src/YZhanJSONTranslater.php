@@ -16,7 +16,7 @@ class YZhanJSONTranslater {
     $this->apiUrl = $params['apiUrl'];
   }
 
-  public function translate(array $json, string $language, ?array $params = array()): array {
+  public function translate(array $json, string $language, ?array $params = array()) {
     $res = $this->yzhanGateway->cache($params['type'] ?? 'File', $params['params'] ?? array())->request(array_merge(array(
       'method' => 'POST',
       'url' => $this->apiUrl . '/v1/chat/completions',
@@ -31,7 +31,7 @@ class YZhanJSONTranslater {
     }
 
     $body = json_decode($res[1]['body'], true);
-    return json_decode($body['choices'][0]['message']['content'], true);
+    return $body['choices'][0]['message']['content'];
   }
 
   public function getClient() {
