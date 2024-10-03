@@ -4,10 +4,10 @@ JSON language translater using OpenAI with cache. 使用 AI 将 JSON 翻译成�
 
 ## Features
 
-- **JSON Translation**: Translates the values of a JSON object into multiple languages while keeping the keys unchanged.
-- **OpenAI Integration**: Uses the OpenAI API to provide accurate and high-quality translations.
-- **Caching**: Caches the results to optimize API usage and save costs.
-- **Customizable**: Allows configuring the API client and endpoints.
+- **JSON Translation**: Translates JSON object values into multiple languages, while keeping the keys unchanged.
+- **OpenAI Integration**: Utilizes OpenAI's API to provide high-quality translations.
+- **Configurable Caching**: Supports setting cache types, expiration, and storage options to optimize API usage.
+- **Customizable**: Allows configuration of the API client, endpoints, and cache settings.
 
 ## Installation
 
@@ -25,7 +25,9 @@ composer install --dev
 
 ## Usage
 
-Here's an example of how to use the YZhanJSONTranslater to translate JSON objects:
+### Basic Usage Example
+
+Here’s how you can use **YZhanJSONTranslater** to translate a JSON object with caching settings:
 
 ```php
 use YZhanJSONTranslater\YZhanJSONTranslater;
@@ -38,19 +40,43 @@ $translator = new YZhanJSONTranslater(array(
 ));
 
 $json = array('hello' => 'hello');
-$translatedJson = $translator->translate($json, 'zh-CN'); // Translates to Simplified Chinese
+$cache = array(
+  'type' => 'File',            // Cache type (e.g., File)
+  'params' => array('dir' => '/path/to/cache'), // Cache directory for 'File' type
+  'maxAge' => 3600             // Cache expiration time in seconds (1 hour)
+);
+
+$translatedJson = $translator->translate($json, 'zh-CN', $cache); // Translates to Simplified Chinese
 print_r($translatedJson);
+```
+
+### Cache Parameters
+
+The `cache` parameter allows you to control the caching behavior:
+
+- **`type`**: Specifies the cache type. For example, `File` indicates file-based caching.
+- **`params`**: An associative array with cache-specific parameters. For `File` caching, this includes the `dir` key, which specifies the directory for storing cached data.
+- **`maxAge`**: Defines the cache expiration time in seconds. Once this time passes, the cached data will expire and a new API request will be made.
+
+### Example Cache Configuration
+
+```php
+$cache = array(
+  'type' => 'File',           // Cache type can be 'File', etc.
+  'params' => array('dir' => '/path/to/cache'), // Cache directory
+  'maxAge' => 7200            // Cache expiration in seconds (2 hours)
+);
 ```
 
 ## Environment Variables
 
-The library relies on the following environment variables to configure OpenAI:
+The following environment variables are required to configure OpenAI:
 
 - `OPENAI_APIKEY`: Your OpenAI API key.
-- `OPENAI_APIURL`: The OpenAI API base URL (default: `https://api.openai.com`).
+- `OPENAI_APIURL`: The base URL for the OpenAI API (default: `https://api.openai.com`).
 - `OPENAI_ORGANIZATION`: Your OpenAI organization ID.
 
-Use a `.env` file to provide these environment variables:
+Use a `.env` file to load these variables:
 
 ```
 OPENAI_APIKEY=your-openai-api-key
@@ -60,7 +86,7 @@ OPENAI_ORGANIZATION=your-openai-organization
 
 ## Testing
 
-The library uses PHPUnit for testing. You can run the tests using:
+You can run unit tests using PHPUnit:
 
 ```bash
 composer test
@@ -72,9 +98,9 @@ To generate a test coverage report:
 composer coverage
 ```
 
-## Example Test Case
+### Example Test Case
 
-The `YZhanJSONTranslaterTest` includes unit tests to ensure the correctness of the translation functionality.
+The following test ensures that the translation functionality works as expected:
 
 ```php
 public function dataProvider(): array {
