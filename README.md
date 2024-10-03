@@ -4,10 +4,10 @@ JSON language translater using OpenAI with cache. 使用 AI 将 JSON 翻译成�
 
 ## Features
 
-- **JSON Translation**: Translates JSON object values into multiple languages, while keeping the keys unchanged.
-- **OpenAI Integration**: Utilizes OpenAI's API to provide high-quality translations.
-- **Configurable Caching**: Supports setting cache types, expiration, and storage options to optimize API usage.
-- **Customizable**: Allows configuration of the API client, endpoints, and cache settings.
+- **JSON Translation**: Translate values of JSON objects into multiple languages while keeping the keys unchanged.
+- **OpenAI Integration**: Leverages OpenAI’s GPT-4 model for high-quality translations.
+- **Configurable Caching**: Support for file-based caching, allowing translations to be cached to reduce API calls.
+- **Request Timeout**: Allows users to configure request timeout settings to manage API response time.
 
 ## Installation
 
@@ -27,7 +27,7 @@ composer install --dev
 
 ### Basic Usage Example
 
-Here’s how you can use **YZhanJSONTranslater** to translate a JSON object with caching settings:
+Here’s how you can use **YZhanJSONTranslater** to translate a JSON object with caching and timeout settings:
 
 ```php
 use YZhanJSONTranslater\YZhanJSONTranslater;
@@ -40,43 +40,54 @@ $translator = new YZhanJSONTranslater(array(
 ));
 
 $json = array('hello' => 'hello');
-$cache = array(
-  'type' => 'File',            // Cache type (e.g., File)
-  'params' => array('dir' => '/path/to/cache'), // Cache directory for 'File' type
-  'maxAge' => 3600             // Cache expiration time in seconds (1 hour)
+$params = array(
+  'type' => 'File',                     // Optional: Cache type ('File' by default)
+  'params' => array('dir' => '/path/to/cache'), // Optional: Cache directory for file-based caching
+  'cache' => array('maxAge' => 3600),   // Optional: Cache expiration in seconds
+  'timeout' => 10,                      // Optional: Set request timeout in seconds (default: 6s)
 );
 
-$translatedJson = $translator->translate($json, 'zh-CN', $cache); // Translates to Simplified Chinese
+$translatedJson = $translator->translate($json, 'zh-CN', $params); // Translate to Simplified Chinese
 print_r($translatedJson);
 ```
 
-### Cache Parameters
+### Parameters for `translate` Function
 
-The `cache` parameter allows you to control the caching behavior:
+The `translate` function accepts the following arguments:
 
-- **`type`**: Specifies the cache type. For example, `File` indicates file-based caching.
-- **`params`**: An associative array with cache-specific parameters. For `File` caching, this includes the `dir` key, which specifies the directory for storing cached data.
-- **`maxAge`**: Defines the cache expiration time in seconds. Once this time passes, the cached data will expire and a new API request will be made.
+- **`$json`**: The JSON object to translate (array format).
+- **`$language`**: Target language for translation (e.g., `'zh-CN'` for Simplified Chinese).
+- **`$params`**: (Optional) Array of options for caching and request customization:
+  - **`type`**: Cache type (default is `'File'`).
+  - **`params`**: Cache-specific parameters (e.g., directory for file-based caching).
+  - **`cache`**: Array containing cache configuration options:
+    - **`maxAge`**: Cache expiration time in seconds.
+  - **`timeout`**: Request timeout in seconds (default is 6 seconds).
 
-### Example Cache Configuration
+### Example of Caching Configuration
+
+Here’s an example that sets up file-based caching with a cache expiration of 1 hour:
 
 ```php
-$cache = array(
-  'type' => 'File',           // Cache type can be 'File', etc.
-  'params' => array('dir' => '/path/to/cache'), // Cache directory
-  'maxAge' => 7200            // Cache expiration in seconds (2 hours)
+$params = array(
+  'type' => 'File',                     // Cache type (File-based)
+  'params' => array('dir' => '/path/to/cache'), // Directory for cache files
+  'cache' => array('maxAge' => 3600),   // Cache expiration time: 1 hour
+  'timeout' => 10,                      // API request timeout: 10 seconds
 );
+
+$translatedJson = $translator->translate($json, 'zh-CN', $params);
 ```
 
 ## Environment Variables
 
-The following environment variables are required to configure OpenAI:
+The library relies on the following environment variables to configure OpenAI:
 
-- `OPENAI_APIKEY`: Your OpenAI API key.
-- `OPENAI_APIURL`: The base URL for the OpenAI API (default: `https://api.openai.com`).
-- `OPENAI_ORGANIZATION`: Your OpenAI organization ID.
+- **`OPENAI_APIKEY`**: Your OpenAI API key.
+- **`OPENAI_APIURL`**: OpenAI API base URL (default: `https://api.openai.com`).
+- **`OPENAI_ORGANIZATION`**: Your OpenAI organization ID.
 
-Use a `.env` file to load these variables:
+Use a `.env` file to provide these environment variables:
 
 ```
 OPENAI_APIKEY=your-openai-api-key
@@ -86,7 +97,7 @@ OPENAI_ORGANIZATION=your-openai-organization
 
 ## Testing
 
-You can run unit tests using PHPUnit:
+The library uses PHPUnit for testing. To run the tests:
 
 ```bash
 composer test
@@ -99,8 +110,6 @@ composer coverage
 ```
 
 ### Example Test Case
-
-The following test ensures that the translation functionality works as expected:
 
 ```php
 public function dataProvider(): array {

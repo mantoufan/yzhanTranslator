@@ -27,7 +27,7 @@ class YZhanJSONTranslaterTest extends TestCase {
    * @depends testConstruct
    * @dataProvider dataProvider
    */
-  public function testSet(array | object $json, string $language, array $translatedJson, &$yzhanJSONTranslater) {
+  public function testSet(array $json, string $language, array $translatedJson, &$yzhanJSONTranslater) {
     $this->assertEquals($yzhanJSONTranslater->translate($json, $language), $translatedJson);
   }
 }

@@ -16,20 +16,18 @@ class YZhanJSONTranslater {
     $this->apiUrl = $params['apiUrl'];
   }
 
-  public function translate(array | object $json, string $language, array $cache): array | null {
-    $res = $this->yzhanGateway->cache($cache['type'], $cache['params'])->request(array(
+  public function translate(array $json, string $language, ?array $params = array()): array {
+    $res = $this->yzhanGateway->cache($params['type'] ?? 'File', $params['params'] ?? array())->request(array_merge(array(
       'method' => 'POST',
       'url' => $this->apiUrl . '/v1/chat/completions',
       'postFields' => array(
         'model' => 'gpt-4o',
         'messages' => array(array('role' => 'system', "content" => 'Translate the values of the JSON object below into [' . $language . '], keep the keys unchanged, and output only the JSON string.\n' . json_encode($json))),
       ),
-      'cache' => array(
-        'maxAge' => $cache['maxAge'],
-      ),
-    ));
+    ), $params));
+
     if (!$res[1]['body']) {
-      return null;
+      return array();
     }
 
     $body = json_decode($res[1]['body'], true);
