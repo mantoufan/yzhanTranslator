@@ -1,0 +1,36 @@
+{
+  "name": "mantoufan/yzhanjsontranslater",
+  "type": "library",
+  "description": "JSON language translater using OpenAI with cache. 使用 AI 将 JSON 翻译成不同语言，缓存结果以节省费用.",
+  "keywords": [
+    "JSON",
+    "Translater",
+    "OpenAI",
+    "Cache"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Shon Wu",
+      "email": "mhjlw@126.com",
+      "homepage": "https://github.com/mantoufan"
+    }
+  ],
+  "scripts": {
+    "test": "phpunit",
+    "coverage": "phpunit --coverage-clover clover.xml"
+  },
+  "require": {
+    "php": ">=5.4",
+    "vlucas/phpdotenv": "^5.4",
+    "mantoufan/yzhangateway": "^1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "YZhanJSONTranslater\\": "src/"
+    }
+  }
+}
