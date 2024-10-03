@@ -21,8 +21,8 @@ class YZhanJSONTranslater {
       'method' => 'POST',
       'url' => $this->apiUrl . '/v1/chat/completions',
       'postFields' => array(
-        'model' => 'gpt-4o',
-        'messages' => array(array('role' => 'system', "content" => 'Translate the values of the JSON object below into [' . $language . '], keep the keys unchanged, and output only the JSON string.\n' . json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES))),
+        'model' => 'gpt-4o-mini',
+        'messages' => array(array('role' => 'system', "content" => 'Translate the values of the JSON object below into [' . $language . '], keep the keys unchanged, and output only the JSON string.\n' . json_encode($json, JSON_UNESCAPED_UNICODE))),
       ),
     ), $params));
 
@@ -31,7 +31,12 @@ class YZhanJSONTranslater {
     }
 
     $body = json_decode($res[1]['body'], true);
-    return json_decode($body['choices'][0]['message']['content'], true);
+
+    if ($body['choices'][0]['message']['finish_reason'] === 'length') {
+      return array();
+    }
+
+    return json_decode($body['choices'][0]['message']['content'], true) ?? array();
   }
 
   public function getClient() {
