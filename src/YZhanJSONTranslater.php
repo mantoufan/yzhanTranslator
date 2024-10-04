@@ -23,22 +23,31 @@ class YZhanJSONTranslater {
     }
     $content .= json_encode($json, JSON_UNESCAPED_UNICODE);
 
-    $res = $this->yzhanGateway->cache($params['type'] ?? 'File', $params['params'] ?? array())->request(array_merge(array(
+    $params = array_merge(array(
       'method' => 'POST',
       'url' => $this->apiUrl . '/v1/chat/completions',
       'postFields' => array(
         'model' => 'gpt-4o-mini',
         'messages' => array(array('role' => 'system', "content" => $content)),
       ),
-    ), $params));
+    ), $params);
 
-    if (!$res[1]['body']) {
-      return array();
+    $res = $this->yzhanGateway->cache($params['type'] ?? 'File', $params['params'] ?? array())->request($params);
+
+    if (empty($res[1]['body']) === false) {
+      $body = json_decode($res[1]['body'], true);
+
+      if (empty($body['choices'][0]['message']['content']) === false) {
+        $res = json_decode($body['choices'][0]['message']['content'], true);
+
+        if (empty($res) === false) {
+          return $res;
+        }
+      }
     }
 
-    $body = json_decode($res[1]['body'], true);
-
-    return json_decode($body['choices'][0]['message']['content'], true) ?? array();
+    $this->yzhanGateway->getCache()->delete($this->yzhanGateway->getKey($params));
+    return array();
   }
 
   public function getClient() {
