@@ -41,6 +41,7 @@ $translator = new YZhanJSONTranslater(array(
 
 $json = array('hello' => 'hello');
 $params = array(
+  'prompt'=> '', //Optional: Additional prompt to customize results
   'type' => 'File',                     // Optional: Cache type ('File' by default)
   'params' => array('dir' => '/path/to/cache'), // Optional: Cache directory for file-based caching
   'cache' => array('maxAge' => 3600),   // Optional: Cache expiration in seconds
@@ -58,6 +59,7 @@ The `translate` function accepts the following arguments:
 - **`$json`**: The JSON object to translate (array format).
 - **`$language`**: Target language for translation (e.g., `'zh-CN'` for Simplified Chinese).
 - **`$params`**: (Optional) Array of options for caching and request customization:
+  - **`prompt`** Additional prompt to customize results, such as 'do not translate the href attribute'
   - **`type`**: Cache type (default is `'File'`).
   - **`params`**: Cache-specific parameters (e.g., directory for file-based caching).
   - **`cache`**: Array containing cache configuration options:
@@ -109,17 +111,40 @@ To generate a test coverage report:
 composer coverage
 ```
 
-### Example Test Case
+### Example
 
 ```php
-public function dataProvider(): array {
-  return array(
-    array(array('hello' => 'hello'), 'zh-CN', array('hello' => '你好')),
-    array(array('hello' => 'hello'), 'zh-TW', array('hello' => '你好')),
-    array(array('hello' => 'hello'), 'jp', array('hello' => 'こんにちは')),
-    array(array('hello' => '你好'), 'en', array('hello' => 'hello')),
-  );
-}
+<?php
+require 'vendor/autoload.php';
+
+use YZhanJSONTranslater\YZhanJSONTranslater;
+
+// Initialize the YZhanJSONTranslater
+$translator = new YZhanJSONTranslater(array(
+    'client' => 'OpenAI',
+    'apiKey' => getenv('OPENAI_APIKEY'),
+    'apiUrl' => getenv('OPENAI_APIURL'),
+    'organization' => getenv('OPENAI_ORGANIZATION'),
+));
+
+// Example JSON to translate
+$jsonToTranslate = array('hello' => 'hello');
+
+// Translate to Simplified Chinese
+$translatedJson = $translator->translate($jsonToTranslate, 'zh-CN');
+print_r($translatedJson); // Outputs: Array ( [hello] => 你好 )
+
+// Translate back to English
+$translatedJsonBack = $translator->translate(array('hello' => '你好'), 'en');
+print_r($translatedJsonBack); // Outputs: Array ( [hello] => Hello )
+
+// Using a prompt to retain original values
+$prompt = 'If there is a key named \'k\', retain the original value, but add a new key \'k2\' at the same level, containing the translated value.';
+$jsonWithPrompt = array('k' => '你好');
+
+$translatedWithPrompt = $translator->translate($jsonWithPrompt, 'en', array('prompt' => $prompt));
+print_r($translatedWithPrompt); // Outputs: Array ( [k] => 你好 [k2] => Hello )
+?>
 ```
 
 ## Requirements
