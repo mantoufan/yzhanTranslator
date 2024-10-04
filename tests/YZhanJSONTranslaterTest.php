@@ -22,12 +22,27 @@ class YZhanJSONTranslaterTest extends TestCase {
       array(array('hello' => '你好'), 'en', array('hello' => 'Hello')),
     );
   }
+  public function dataProviderWithPrompt(): array {
+    return array(
+      array(array('k' => '你好'), 'en', array('k' => '你好', 'k2' => 'Hello')),
+      array(array(array('k' => '你好')), 'en', array(array('k' => '你好', 'k2' => 'Hello'))),
+    );
+  }
   /**
    * @depends testConstruct
    * @dataProvider dataProvider
    */
   public function testSet(array $json, string $language, array $translatedJson, &$yzhanJSONTranslater) {
     $this->assertEquals($yzhanJSONTranslater->translate($json, $language), $translatedJson);
+  }
+
+  /**
+   * @depends testConstruct
+   * @dataProvider dataProvider
+   */
+  public function testSetPrompt(array $json, string $language, array $translatedJson, &$yzhanJSONTranslater) {
+    $prompt = 'If there is a key named \'k\', retain the original value, but add a new key \'k2\' at the same level, containing the translated value. ';
+    $this->assertEquals($yzhanJSONTranslater->translate($json, $language, array('prompt' => $prompt)), $translatedJson);
   }
 }
 ?>

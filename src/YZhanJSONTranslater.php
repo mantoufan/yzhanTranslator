@@ -17,12 +17,18 @@ class YZhanJSONTranslater {
   }
 
   public function translate(array $json, string $language, ?array $params = array()) {
+    $content = 'Translate the values of the JSON object below into [' . $language . ']. Keep the keys unchanged, and output only the JSON string, without any markdown formatting. ';
+    if (empty($params['prompt']) === false) {
+      $content .= $params['prompt'];
+    }
+    $content .= json_encode($json, JSON_UNESCAPED_UNICODE);
+
     $res = $this->yzhanGateway->cache($params['type'] ?? 'File', $params['params'] ?? array())->request(array_merge(array(
       'method' => 'POST',
       'url' => $this->apiUrl . '/v1/chat/completions',
       'postFields' => array(
         'model' => 'gpt-4o-mini',
-        'messages' => array(array('role' => 'system', "content" => 'Translate the values of the JSON object below into [' . $language . '], keep the keys unchanged, and output only the JSON string.\n' . json_encode($json, JSON_UNESCAPED_UNICODE))),
+        'messages' => array(array('role' => 'system', "content" => $content)),
       ),
     ), $params));
 
