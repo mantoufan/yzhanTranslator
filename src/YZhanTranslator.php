@@ -16,10 +16,12 @@ class YZhanTranslator {
     $this->apiUrl = $params['apiUrl'];
   }
 
-  public function run(string $content, ?array $params = array()) {
+  public function run(string $content, string $input, ?array $params = array()) {
     if (empty($params['prompt']) === false) {
-      $content .= $params['prompt'];
+      $content .= '\n' . $params['prompt'];
     }
+
+    $content .= '\n' . $input;
 
     $params = array_merge(array(
       'method' => 'POST',
@@ -48,9 +50,9 @@ class YZhanTranslator {
 
   public function translate(string $input, string $language, ?array $params = array()) {
     if (isset($params['type']) && $params['type'] === 'json') {
-      list($content, $params) = $this->run($input . '\nTranslate the values of the ' . $params['type'] . ' above into [' . $language . ']. Keep the keys unchanged, and output only the JSON string, without any markdown formatting. ', $params);
+      list($content, $params) = $this->run('Translate the values of the ' . $params['type'] . ' below into [' . $language . ']. Keep the keys unchanged, and output only the JSON string, without any markdown formatting. ', $input, $params);
     } else {
-      list($content, $params) = $this->run($input . '\nTranslate the content above into [' . $language . ']', $params);
+      list($content, $params) = $this->run($input . '\nTranslate the content below into [' . $language . '].', $input, $params);
     }
 
     if (empty($content) === false) {
@@ -69,7 +71,7 @@ class YZhanTranslator {
   }
 
   public function detect(string $input, ?array $languages, ?array $params = array()) {
-    list($content, $params) = $this->run($input . '\nWhich of the following languages is the content in: ' . implode(',', $languages) . ', etc.? Output only one language name', $params);
+    list($content, $params) = $this->run('Which of the following languages is the content in: ' . implode(',', $languages) . ', etc.? Output only one language name.', $input, $params);
 
     if (empty($content) === false) {
       return $content;
