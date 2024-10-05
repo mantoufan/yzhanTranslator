@@ -1,6 +1,6 @@
-# yzhanTranslator
+# YZhanTranslator
 
-yzhanTranslator is a PHP library for translating content using OpenAI's language models with caching capabilities. It supports translating strings and JSON objects, as well as language detection.
+YZhanTranslator is a PHP library for translating content using OpenAI's language models with caching capabilities. It supports translating strings and JSON objects, as well as language detection.
 
 ## Features
 
@@ -18,10 +18,10 @@ yzhanTranslator is a PHP library for translating content using OpenAI's language
 
 ## Installation
 
-Install yzhanTranslator using Composer:
+Install YZhanTranslator using Composer:
 
 ```bash
-composer require mantoufan/yzhanTranslator
+composer require mantoufan/yzhantranslator
 ```
 
 ## Usage
@@ -29,9 +29,9 @@ composer require mantoufan/yzhanTranslator
 ### Basic Translation
 
 ```php
-use yzhanTranslator\yzhanTranslator;
+use YZhanTranslator\YZhanTranslator;
 
-$translator = new yzhanTranslator([
+$translator = new YZhanTranslator([
     'client' => 'OpenAI',
     'apiKey' => 'your_openai_api_key',
     'apiUrl' => 'https://api.openai.com',
@@ -81,7 +81,7 @@ print_r($result); // ['k' => '你好', 'k2' => 'Hello']
 
 ## Configuration
 
-yzhanTranslator uses environment variables for configuration. Create a `.env` file in your project root with the following contents:
+YZhanTranslator uses environment variables for configuration. Create a `.env` file in your project root with the following contents:
 
 ```
 OPENAI_APIKEY=your_openai_api_key
