@@ -7,6 +7,7 @@ YZhanTranslator can automatically cache (configurable) results to save costs.
 
 - Translate strings and JSON objects
 - Detect language of input text (including JSON content)
+- Translate images by providing URLs and receiving descriptions
 - Cache translation results to save costs
 - Customizable prompts for fine-tuned translations
 - Built on top of YZhanGateway for flexible API interactions
@@ -78,6 +79,28 @@ $result = $translator->translate($json, 'en', [
     'prompt' => $prompt
 ]);
 print_r($result); // ['k' => '你好', 'k2' => 'Hello']
+```
+
+### Translating Images
+
+You can now translate images by providing an array of image URLs. The translator will return descriptions for each image in the specified language.
+
+```php
+use YZhanTranslator\YZhanTranslator;
+
+$translator = new YZhanTranslator([
+    'client' => 'OpenAI',
+    'apiKey' => 'your_openai_api_key',
+    'apiUrl' => 'https://api.openai.com',
+    'organization' => 'your_openai_organization_id',
+]);
+
+$images = [
+    'https://example.com/image1.jpg',
+    'https://example.com/image2.jpg',
+];
+$result = $translator->translate(json_encode($images), 'zh-CN', ['type' => 'images']);
+print_r($result); // ['https://example.com/image1.jpg' => ['description' => ''], 'https://example.com/image2.jpg' => ['description' => '']]
 ```
 
 ## Configuration
