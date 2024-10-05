@@ -1,21 +1,21 @@
 <?php
 use PHPUnit\Framework\TestCase;
-use YZhanTranslater\YZhanTranslater;
+use YZhanTranslator\YZhanTranslator;
 
-class YZhanTranslaterTest extends TestCase {
+class YZhanTranslatorTest extends TestCase {
   private $languages = array('en', 'zh-CN', 'zh-TW', 'jp');
 
   public function testConstruct() {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
     $dotenv->load();
-    $yzhanTranslater = new YZhanTranslater(array(
+    $yzhanTranslator = new YZhanTranslator(array(
       'client' => 'OpenAI',
       'apiKey' => $_ENV['OPENAI_APIKEY'],
       'apiUrl' => $_ENV['OPENAI_APIURL'],
       'organization' => $_ENV['OPENAI_ORGANIZATION'],
     ));
-    $this->assertEquals($yzhanTranslater->getClient(), 'OpenAI');
-    return $yzhanTranslater;
+    $this->assertEquals($yzhanTranslator->getClient(), 'OpenAI');
+    return $yzhanTranslator;
   }
 
   public function dataProviderString(): array {
@@ -29,16 +29,16 @@ class YZhanTranslaterTest extends TestCase {
    * @depends testConstruct
    * @dataProvider dataProviderString
    */
-  public function testTranslateString(string $string, string $language, string $translatedString, string $_, &$yzhanTranslater) {
-    $this->assertEquals($yzhanTranslater->translate($string, $language), $translatedString);
+  public function testTranslateString(string $string, string $language, string $translatedString, string $_, &$yzhanTranslator) {
+    $this->assertEquals($yzhanTranslator->translate($string, $language), $translatedString);
   }
 
   /**
    * @depends testConstruct
    * @dataProvider dataProviderString
    */
-  public function testDetectString(string $string, string $_, string $__, string $detectedString, &$yzhanTranslater) {
-    $this->assertEquals($yzhanTranslater->detect($string, $this->languages), $detectedString);
+  public function testDetectString(string $string, string $_, string $__, string $detectedString, &$yzhanTranslator) {
+    $this->assertEquals($yzhanTranslator->detect($string, $this->languages), $detectedString);
   }
 
   public function dataProviderJson(): array {
@@ -53,16 +53,16 @@ class YZhanTranslaterTest extends TestCase {
    * @depends testConstruct
    * @dataProvider dataProviderJson
    */
-  public function testTranslateJson(array $ar, string $language, array $translatedJson, string $_, &$yzhanTranslater) {
-    $this->assertEquals($yzhanTranslater->translate(json_encode($ar, JSON_UNESCAPED_UNICODE), $language, array('type' => 'json')), $translatedJson);
+  public function testTranslateJson(array $ar, string $language, array $translatedJson, string $_, &$yzhanTranslator) {
+    $this->assertEquals($yzhanTranslator->translate(json_encode($ar, JSON_UNESCAPED_UNICODE), $language, array('type' => 'json')), $translatedJson);
   }
 
   /**
    * @depends testConstruct
    * @dataProvider dataProviderJson
    */
-  public function testDetectJson(array $ar, string $_, array $__, string $detectedString, &$yzhanTranslater) {
-    $this->assertEquals($yzhanTranslater->detect(json_encode($ar, JSON_UNESCAPED_UNICODE), $this->languages), $detectedString);
+  public function testDetectJson(array $ar, string $_, array $__, string $detectedString, &$yzhanTranslator) {
+    $this->assertEquals($yzhanTranslator->detect(json_encode($ar, JSON_UNESCAPED_UNICODE), $this->languages), $detectedString);
   }
 
   public function dataProviderJsonAndPrompt(): array {
@@ -75,18 +75,18 @@ class YZhanTranslaterTest extends TestCase {
    * @depends testConstruct
    * @dataProvider dataProviderJsonAndPrompt
    */
-  public function testTranslateJsonAndPrompt(array $ar, string $language, array $translatedJson, string $_, &$yzhanTranslater) {
+  public function testTranslateJsonAndPrompt(array $ar, string $language, array $translatedJson, string $_, &$yzhanTranslator) {
     $prompt = 'If there is a key named \'k\', retain the original value, but add a new key \'k2\' at the same level, containing the translated value. ';
-    $this->assertEquals($yzhanTranslater->translate(json_encode($ar, JSON_UNESCAPED_UNICODE), $language, array('type' => 'json', 'prompt' => $prompt)), $translatedJson);
+    $this->assertEquals($yzhanTranslator->translate(json_encode($ar, JSON_UNESCAPED_UNICODE), $language, array('type' => 'json', 'prompt' => $prompt)), $translatedJson);
   }
 
   /**
    * @depends testConstruct
    * @dataProvider dataProviderJsonAndPrompt
    */
-  public function testDetectJsonAndPrompt(array $ar, string $_, array $__, string $detectedString, &$yzhanTranslater) {
+  public function testDetectJsonAndPrompt(array $ar, string $_, array $__, string $detectedString, &$yzhanTranslator) {
     $prompt = 'If there is a key named \'k\', retain the original value, but add a new key \'k2\' at the same level, containing the translated value. ';
-    $this->assertEquals($yzhanTranslater->detect(json_encode($ar, JSON_UNESCAPED_UNICODE), $this->languages, array('prompt' => $prompt)), $detectedString);
+    $this->assertEquals($yzhanTranslator->detect(json_encode($ar, JSON_UNESCAPED_UNICODE), $this->languages, array('prompt' => $prompt)), $detectedString);
   }
 }
 ?>

@@ -1,5 +1,5 @@
 {
-  "name": "mantoufan/yzhantranslater",
+  "name": "mantoufan/yzhantranslator",
   "type": "library",
   "description": "Language translater using OpenAI with cache. 使用 AI 翻译内容到不同语言，缓存结果以节省费用.",
   "keywords": [
@@ -30,7 +30,7 @@
   },
   "autoload": {
     "psr-4": {
-      "YZhanTranslater\\": "src/"
+      "YZhanTranslator\\": "src/"
     }
   }
 }

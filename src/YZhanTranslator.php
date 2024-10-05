@@ -1,8 +1,8 @@
 <?php
-namespace YZhanTranslater;
+namespace YZhanTranslator;
 use YZhanGateway\YZhanGateway;
 
-class YZhanTranslater {
+class YZhanTranslator {
   private $yzhanGateway;
   private $apiUrl;
   private $client;
