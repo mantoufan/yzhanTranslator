@@ -1,6 +1,6 @@
 # YZhanTranslator
 
-YZhanTranslator is a PHP library for translating content using OpenAI's language models with caching capabilities. It supports translating strings and JSON objects, as well as language detection.  
+YZhanTranslator is a PHP library for translating content using OpenAI's language models with caching capabilities. It supports translating strings, JSON objects and images arrays, as well as language detection.  
 YZhanTranslator can automatically cache (configurable) results to save costs.
 
 ## Features
@@ -81,9 +81,10 @@ $result = $translator->translate($json, 'en', [
 print_r($result); // ['k' => '你好', 'k2' => 'Hello']
 ```
 
-### Translating Images
+### Images Descriptions
 
-You can now translate images by providing an array of image URLs. The translator will return descriptions for each image in the specified language.
+You can now translate images by providing an array of image URLs.  
+The translator will return descriptions for each image in the specified language.
 
 ```php
 use YZhanTranslator\YZhanTranslator;
